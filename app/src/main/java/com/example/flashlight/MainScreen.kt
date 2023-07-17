@@ -18,18 +18,20 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.State
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.example.flashlight.ui.MainScreenViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainScreen(){
+fun MainScreen(
+    viewModel: MainScreenViewModel
+){
     Surface(
         modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background
     ) {
@@ -47,21 +49,32 @@ fun MainScreen(){
                 )
             }
         ) { paddingValues ->
+
             Surface(modifier = Modifier.padding(paddingValues)) {
-                FlashlightButton(LocalContext.current)
+                FlashlightButton(
+                    viewModel.flashLightState,
+                    onFlashlightStateChange = {
+                        viewModel.changeFlashlightState()
+                    },
+                    LocalContext.current
+                )
             }
         }
     }
 }
 
 @Composable
-fun FlashlightButton(context: Context) {
-    val flashlightStatus = remember {
-        mutableStateOf(false)
-    }
-    val buttonChecked = remember {
-        mutableStateOf(false)
-    }
+fun FlashlightButton(
+    flashlightState: State<Boolean>,
+    onFlashlightStateChange: () -> Unit,
+    context: Context
+) {
+//    val flashlightStatus = remember {
+//        mutableStateOf(flashLightState)
+//    }
+//    val buttonChecked = remember {
+//        mutableStateOf(false)
+//    }
 
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -71,42 +84,48 @@ fun FlashlightButton(context: Context) {
         FilledIconToggleButton(
             // Could move the logic to a viewModel
 
-            checked = buttonChecked.value,
+            checked = flashlightState.value,
             shape = RoundedCornerShape(4.dp),
             onCheckedChange = {
-                flashlightStatus.value = !flashlightStatus.value
-
-                lateinit var cameraID: String
-                val cameraManager: CameraManager = context.getSystemService(Context.CAMERA_SERVICE) as CameraManager
-
-                try {
-                    cameraID = cameraManager.cameraIdList[0]
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                }
-
-                if (flashlightStatus.value) {
-                    try {
-                        cameraManager.setTorchMode(cameraID, true)
-                        Toast.makeText(context, "Flashlight turned on..", Toast.LENGTH_LONG).show()
-                    } catch (e: Exception) {
-                        e.printStackTrace()
-                    }
-                } else {
-                    try {
-                        cameraManager.setTorchMode(cameraID, false)
-                        Toast.makeText(context, "Flashlight turned off..", Toast.LENGTH_SHORT).show()
-                    } catch (e: Exception) {
-                        e.printStackTrace()
-                    }
-                }
+                onFlashlightStateChange()
+                turnFlashlightOn(flashlightState, context)
             }
         ){
-            if (flashlightStatus.value){
+            if (flashlightState.value){
                 Image(painter = painterResource(id = R.drawable.flashlight_on_64), contentDescription = "Light is on")
             }else{
                 Image(painter = painterResource(id = R.drawable.flashlight_off_64), contentDescription = "Light is off")
             }
+        }
+    }
+}
+
+fun turnFlashlightOn(
+    flashlightState: State<Boolean>,
+    context: Context
+) {
+    lateinit var cameraID: String
+    val cameraManager: CameraManager = context.getSystemService(Context.CAMERA_SERVICE) as CameraManager
+
+    try {
+        cameraID = cameraManager.cameraIdList[0]
+    } catch (e: Exception) {
+        e.printStackTrace()
+    }
+
+    if (flashlightState.value) {
+        try {
+            cameraManager.setTorchMode(cameraID, true)
+            Toast.makeText(context, "Flashlight turned on..", Toast.LENGTH_LONG).show()
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    } else {
+        try {
+            cameraManager.setTorchMode(cameraID, false)
+            Toast.makeText(context, "Flashlight turned off..", Toast.LENGTH_SHORT).show()
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
     }
 }
