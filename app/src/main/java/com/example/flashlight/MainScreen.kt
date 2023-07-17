@@ -80,7 +80,7 @@ fun FlashlightButton(
             shape = RoundedCornerShape(4.dp),
             onCheckedChange = {
                 onFlashlightStateChange()
-                turnFlashlightOn(flashlightState, context)
+                switchFlashlightOnOff(flashlightState, context)
             }
         ){
             if (flashlightState.value){
@@ -99,7 +99,7 @@ fun FlashlightButton(
     }
 }
 
-fun turnFlashlightOn(
+fun switchFlashlightOnOff(
     flashlightState: State<Boolean>,
     context: Context
 ) {
