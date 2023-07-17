@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">Flashlight</string>
+    <string name="flashlight_turned_on">Flashlight turned ON</string>
+    <string name="flashlight_turned_off">Flashlight turned OFF</string>
+    <string name="content_description_light_is_on">Light is on</string>
+    <string name="content_description_light_is_off">Light is off</string>
+    <string name="top_app_bar_title_flashlight">Flashlight</string>
 </resources>

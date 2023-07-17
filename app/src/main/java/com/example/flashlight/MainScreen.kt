@@ -23,6 +23,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.flashlight.ui.MainScreenViewModel
@@ -40,7 +41,7 @@ fun MainScreen(
                 TopAppBar(
                     title = {
                         Text(
-                            text = "Flashlight",
+                            text = stringResource(R.string.top_app_bar_title_flashlight),
                             modifier = Modifier.fillMaxWidth(),
                             textAlign = TextAlign.Center,
                             color = MaterialTheme.colorScheme.onBackground
@@ -82,8 +83,6 @@ fun FlashlightButton(
         verticalArrangement = Arrangement.Center,
     ) {
         FilledIconToggleButton(
-            // Could move the logic to a viewModel
-
             checked = flashlightState.value,
             shape = RoundedCornerShape(4.dp),
             onCheckedChange = {
@@ -92,9 +91,16 @@ fun FlashlightButton(
             }
         ){
             if (flashlightState.value){
-                Image(painter = painterResource(id = R.drawable.flashlight_on_64), contentDescription = "Light is on")
+                Image(
+                    painter = painterResource(id = R.drawable.flashlight_on_64),
+                    contentDescription = stringResource(R.string.content_description_light_is_on)
+
+                )
             }else{
-                Image(painter = painterResource(id = R.drawable.flashlight_off_64), contentDescription = "Light is off")
+                Image(
+                    painter = painterResource(id = R.drawable.flashlight_off_64),
+                    contentDescription = stringResource(R.string.content_description_light_is_off)
+                )
             }
         }
     }
@@ -116,14 +122,14 @@ fun turnFlashlightOn(
     if (flashlightState.value) {
         try {
             cameraManager.setTorchMode(cameraID, true)
-            Toast.makeText(context, "Flashlight turned on..", Toast.LENGTH_LONG).show()
+            Toast.makeText(context, context.getString(R.string.flashlight_turned_on), Toast.LENGTH_LONG).show()
         } catch (e: Exception) {
             e.printStackTrace()
         }
     } else {
         try {
             cameraManager.setTorchMode(cameraID, false)
-            Toast.makeText(context, "Flashlight turned off..", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, context.getString(R.string.flashlight_turned_off), Toast.LENGTH_SHORT).show()
         } catch (e: Exception) {
             e.printStackTrace()
         }
