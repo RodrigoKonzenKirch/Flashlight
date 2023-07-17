@@ -70,13 +70,6 @@ fun FlashlightButton(
     onFlashlightStateChange: () -> Unit,
     context: Context
 ) {
-//    val flashlightStatus = remember {
-//        mutableStateOf(flashLightState)
-//    }
-//    val buttonChecked = remember {
-//        mutableStateOf(false)
-//    }
-
     Column(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
