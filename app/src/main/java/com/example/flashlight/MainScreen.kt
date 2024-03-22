@@ -2,7 +2,6 @@ package com.example.flashlight
 
 import android.content.Context
 import android.hardware.camera2.CameraManager
-import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -27,6 +26,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.flashlight.ui.MainScreenViewModel
+import com.example.flashlight.utils.longToast
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -115,14 +115,14 @@ fun switchFlashlightOnOff(
     if (flashlightState.value) {
         try {
             cameraManager.setTorchMode(cameraID, true)
-            Toast.makeText(context, context.getString(R.string.flashlight_turned_on), Toast.LENGTH_LONG).show()
+            context.longToast(context.getString(R.string.flashlight_turned_on))
         } catch (e: Exception) {
             e.printStackTrace()
         }
     } else {
         try {
             cameraManager.setTorchMode(cameraID, false)
-            Toast.makeText(context, context.getString(R.string.flashlight_turned_off), Toast.LENGTH_SHORT).show()
+            context.longToast(context.getString(R.string.flashlight_turned_off))
         } catch (e: Exception) {
             e.printStackTrace()
         }
